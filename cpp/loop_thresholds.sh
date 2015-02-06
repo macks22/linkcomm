@@ -82,11 +82,20 @@ do
 done
 
 # Ensure we have the necessary files
-if [[ -z "$PAIRS_FILE" ]]; then
+if [[ -z "$PAIRS_FILE" ]]
+then
     echo "Pairs file is required to run. None given."
     exit $BAD_USAGE
+    .
+else
+    if [[ ! -f "$PAIRS_FILE" ]]; then
+        echo "Pairs file not found: ${PAIRS_FILE}"
+        exit $NO_PAIRS_FILE
+    fi
 fi
 
+# If the user didn't pass the jaccs file, we need to calculate it.
+# Try a variety of different things before failing.
 if [[ -z "$JACCS_FILE" ]]; then
     echo "Jaccard similarity file is required to run. None given."
     echo "Attempting to calculate jaccard similarities."
@@ -97,9 +106,10 @@ if [[ -z "$JACCS_FILE" ]]; then
 
         CWD=$(pwd)
         cd $SCRIPTS_DIR
-        make calc
+        make calc > /dev/null 2>&1
         cd $CWD
 
+        # Make failed for some reason.
         if [[ ! -f "$CALC_JACCS_SCRIPT" ]]
         then
             echo " failed."
@@ -107,8 +117,11 @@ if [[ -z "$JACCS_FILE" ]]; then
             .
         else
             echo " success."
+            .
         fi
     fi
+
+    # We should now have the script, so let's try to calculate jaccs file.
     echo "Pairs file: ${PAIRS_FILE}"
     JACCS_FILE="${PAIRS_FILE%.*}.jaccs"
     echo "Writing jaccard similarity file to: ${JACCS_FILE}."
@@ -117,6 +130,12 @@ if [[ -z "$JACCS_FILE" ]]; then
         echo "Jaccard similarity file failed to write. Exiting."
         exit $NO_JACCS_FILE
     fi
+fi
+
+# Now what if the user passed the file, but it doesn't exist?
+if [[ ! -f "$JACCS_FILE" ]]; then
+    echo "Jaccard similarity file not found: ${JACCS_FILE}"
+    exit $NO_JACCS_FILE
 fi
 
 # Inform the user of our progress.
