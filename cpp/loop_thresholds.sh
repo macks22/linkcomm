@@ -31,9 +31,9 @@ OPTIONS:
    -h    Show this message only
    -p    Pairs file.
    -j    Jaccard similarity file for given pairs file.
-   -s    Scripts directory, where jaccard calculation and cluster scripts are
    -c    Alternate name for clustering script; default is clusterJaccards
-   -o    Output directory; defualts to \"clusters\" in cwd; created if absent"
+   -o    Output directory; defualts to \"clusters\" in cwd; created if absent
+   -s    Scripts directory, where jaccard calculation and cluster scripts are"
 }
 
 # Error codes
@@ -45,7 +45,7 @@ UNABLE_TO_MAKE_OUTPUT_DIR=603
 # Parse command line arguments
 PAIRS_FILE=
 JACCS_FILE=
-SCRIPTS_DIR=$(pwd)
+SCRIPTS_DIR=$(dirname $0)
 OUTPUT_DIR=$(pwd)/clusters
 CLUST_SCRIPT="clusterJaccards"
 
@@ -89,7 +89,34 @@ fi
 
 if [[ -z "$JACCS_FILE" ]]; then
     echo "Jaccard similarity file is required to run. None given."
-    exit $BAD_USAGE
+    echo "Attempting to calculate jaccard similarities."
+    CALC_JACCS_SCRIPT=$SCRIPTS_DIR/calcJaccards
+    if [[ ! -f "$CALC_JACCS_SCRIPT" ]]; then
+        echo "calcJaccards not found in ${SCRIPTS_DIR}"
+        echo -n "Attempting to compile from source..."
+
+        CWD=$(pwd)
+        cd $SCRIPTS_DIR
+        make calc
+        cd $CWD
+
+        if [[ ! -f "$CALC_JACCS_SCRIPT" ]]
+        then
+            echo " failed."
+            exit $NO_JACCS_FILE
+            .
+        else
+            echo " success."
+        fi
+    fi
+    echo "Pairs file: ${PAIRS_FILE}"
+    JACCS_FILE="${PAIRS_FILE%.*}.jaccs"
+    echo "Writing jaccard similarity file to: ${JACCS_FILE}."
+    $CALC_JACCS_SCRIPT $PAIRS_FILE $JACCS_FILE
+    if [[ ! "$?" -eq 0 ]]; then
+        echo "Jaccard similarity file failed to write. Exiting."
+        exit $NO_JACCS_FILE
+    fi
 fi
 
 # Inform the user of our progress.
