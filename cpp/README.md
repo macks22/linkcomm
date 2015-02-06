@@ -17,7 +17,7 @@ an 'edgelist' where each edge is on its own line of the input file and consists
 of two integers (the edge's nodes) separated by a space. This format (edgelist
 with sequential integer nodes) is referred to as a '.pairs' file.
 
-For convenience, the file "edgelist2pairs.py" can convert an arbitrary edgelist
+For convenience, the file `edgelist2pairs.py` can convert an arbitrary edgelist
 with any node ids to the .pairs format. To see how to use it, run
 
     $ python edgelist2pairs.py -h
@@ -43,17 +43,17 @@ net.clusters, and the sizes of each cluster (number of edges and number of
 induced nodes) to net.mc_nc. The latter is useful for quickly computing the
 partition density.
 
-partition_density.py can be used to compute the partition density for a cut, using the
-.mc_nc file.
+`partition_density.py` can be used to compute the partition density for a cut,
+using the .mc_nc file.
 
 Finally, two BASH scripts are provided for convenience:
 
- link_clustering.sh
+ `link_clustering.sh`
      compiles and performs the full calculation (both steps), good for single
      runs. Try it with the included example .pairs file. For help, run
      './link_clustering' (with no arguments) from a terminal.
 
- loop_thresholds.sh
+ `loop_thresholds.sh`
      If the link similarity (.jaccs) file has already been created, this will
      loop over many thresholds, recording the clusters at each. The default
      threshold list combs from 0.1 to 0.9 in increments of 0.1. This can be
