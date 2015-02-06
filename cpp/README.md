@@ -1,4 +1,5 @@
 Link Communities C++
+--------------------
 
 This directory contains C++ code and helper files to perform link clustering for very
 large networks (millions of edges).
@@ -28,6 +29,7 @@ build the binaries for both steps, or build them separately using the following
 instructions.
 
 To perform the first step:
+
 	$ g++ -O5 -o calcJaccards calcAndWrite_Jaccards.cpp
 	$ ./calcJaccards net.pairs net.jaccs
 
@@ -35,30 +37,31 @@ This reads the provided net.pairs and create a (possibly large) net.jaccs file,
 containing all the link similarities.
 
 To record the clusters for a given THRESHOLD:
+
 	$ g++ -O5 -o clusterJaccards clusterJaccsFile.cpp
 	$ ./clusterJaccards net.pairs net.jaccs net.clusters net.mc_nc THRESHOLD
 
 This will scan the net.jaccs file, record all the clusters at THRESHOLD in
 net.clusters, and the sizes of each cluster (number of edges and number of
 induced nodes) to net.mc_nc. The latter is useful for quickly computing the
-partition density.
-
-`partition_density.py` can be used to compute the partition density for a cut,
-using the .mc_nc file.
+partition density. `partition_density.py` can be used to compute the partition
+density for a cut, using the .mc_nc file.
 
 Finally, two BASH scripts are provided for convenience:
 
  `link_clustering.sh`
-     compiles and performs the full calculation (both steps), good for single
-     runs. Try it with the included example .pairs file. For help, run
-     './link_clustering' (with no arguments) from a terminal.
+
+  Compiles and performs the full calculation (both steps), good for single
+  runs. Try it with the included example .pairs file. For help, run
+  './link_clustering' (with no arguments) from a terminal.
 
  `loop_thresholds.sh`
-     If the link similarity (.jaccs) file has already been created, this will
-     loop over many thresholds, recording the clusters at each. The default
-     threshold list combs from 0.1 to 0.9 in increments of 0.1. This can be
-     changed in the file. Run with the -h flag for additional customization
-     options.
+
+  If the link similarity (.jaccs) file has already been created, this will
+  loop over many thresholds, recording the clusters at each. The default
+  threshold list combs from 0.1 to 0.9 in increments of 0.1. This can be
+  changed in the file. Run with the -h flag for additional customization
+  options.
 
 Good luck!
 
