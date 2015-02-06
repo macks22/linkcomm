@@ -144,11 +144,15 @@ echo "Writing to output directory: ${OUTPUT_DIR}"
 
 # Make output directory if it does not exist
 if ! [[ -d $OUTPUT_DIR ]]; then
-    echo -n "Output directory does not exist. Attempting to create... "
+    echo -n "Output directory does not exist. Attempting to create..."
     mkdir $OUTPUT_DIR
-    if [[ $? != 0 ]]; then
-        echo "failed."
+    if [[ $? != 0 ]]
+    then
+        echo " failed."
         exit $UNABLE_TO_MAKE_OUTPUT_DIR;
+        .
+    else
+        echo " success."
     fi
 fi
 
